@@ -18,7 +18,7 @@ def read_from_tokens(tokens):
     输入：以list存储的 tokends
     输出：以list方式存储的 abstract Syntax Tree
 
-    0，检测，如果有语法错误，则报错
+    0，检测，如果有')'语法错误，则报错
     1，生成空list，弹出第一个元素"("
     2，无限循环循环：取后一个的tokens元素：
                 是')'
@@ -37,25 +37,19 @@ def read_from_tokens(tokens):
 
     if len(tokens) == 0:
         raise SyntaxError('unexpected EOF')
-    if tokens[0] == ")":
+
+    token = tokens.pop(0)
+    if token == ')':
         raise SyntaxError('unexpected )')
 
-    if tokens[0] != "(":    #bug如果是单独的["1"]呢？
-        raise SyntaxError('No ( ')
-
-    L = []
-    tokens.pop(0)
-    while True:
-        if tokens[0] == ")":
-            break
-        else:
-            if tokens[0] == "(":
-                L.append(read_from_tokens(tokens))
-                tokens.pop(0)
-            else:
-                elem = tokens.pop(0)
-                L.append(atom(elem))
-    return L
+    if token == '(':
+        L = []
+        while tokens[0] != ')':
+            L.append(read_from_tokens(tokens))
+        tokens.pop(0)  # pop off ')'
+        return L
+    else:
+        return atom(token)
 
 
 def atom(token):
