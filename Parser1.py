@@ -34,9 +34,10 @@ def read_from_tokens(tokens):
 
     3，返回 list
     """
-
     if len(tokens) == 0:
         raise SyntaxError('unexpected EOF')
+    if tokens[0] == ")":
+        raise SyntaxError('unexpected )')
 
     token = tokens.pop(0)
     if token == ')':
